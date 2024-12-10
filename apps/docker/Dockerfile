@@ -29,8 +29,10 @@ RUN mkdir -pv \
         /azerothcore/build
 
 # Configure Timezone
-RUN apt-get update                                          \
-    && apt-get install -y tzdata ca-certificates            \
+RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list \
+    &&  sed -i 's/security.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list \
+    && apt-get update                                   \
+    && apt-get install -y tzdata ca-certificates        \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime   \
     && echo $TZ > /etc/timezone                         \
     && dpkg-reconfigure --frontend noninteractive tzdata
