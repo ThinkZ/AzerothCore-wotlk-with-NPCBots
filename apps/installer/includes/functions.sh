@@ -246,7 +246,8 @@ function inst_download_client_data {
     fi
 
     echo "Downloading client data in: $zipPath ..."
-    curl -L https://github.com/wowgaming/client-data/releases/download/$VERSION/data.zip > "$zipPath" \
+    # curl -L https://github.com/wowgaming/client-data/releases/download/$VERSION/data.zip > "$zipPath" \
+    curl -L http://172.16.31.120/wowgaming/client-data/releases/download/$VERSION/data.zip > "$zipPath" \
         && echo "unzip downloaded file in $path..." && unzip -q -o "$zipPath" -d "$path/" \
         && echo "Remove downloaded file" && rm "$zipPath" \
         && echo "INSTALLED_VERSION=$VERSION" > "$dataVersionFile"
