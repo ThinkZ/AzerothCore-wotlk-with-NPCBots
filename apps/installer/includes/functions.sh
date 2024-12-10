@@ -125,11 +125,11 @@ function inst_module_search {
     echo "Searching $res..."
     echo "";
 
-    readarray -t MODS < <(curl --silent "https://api.github.com/search/repositories?q=org%3Aazerothcore${search}+fork%3Atrue+topic%3Acore-module+sort%3Astars&type=" \
+    readarray -t MODS < <(curl --silent "https://gh-proxy.com/https://api.github.com/search/repositories?q=org%3Aazerothcore${search}+fork%3Atrue+topic%3Acore-module+sort%3Astars&type=" \
         | "$AC_PATH_DEPS/jsonpath/JSONPath.sh" -b '$.items.*.name')
     while (( ${#MODS[@]} > idx )); do
         mod="${MODS[idx++]}"
-        read v b < <(inst_getVersionBranch "https://raw.githubusercontent.com/azerothcore/$mod/master/acore-module.json")
+        read v b < <(inst_getVersionBranch "https://gh-proxy.com/https://raw.githubusercontent.com/azerothcore/$mod/master/acore-module.json")
 
         if [[ "$b" != "none" ]]; then
             echo "-> $mod (tested with AC version: $v)"
@@ -151,10 +151,10 @@ function inst_module_install {
         res="$1"
     fi
 
-    read v b < <(inst_getVersionBranch "https://raw.githubusercontent.com/azerothcore/$res/master/acore-module.json")
+    read v b < <(inst_getVersionBranch "https://gh-proxy.com/https://raw.githubusercontent.com/azerothcore/$res/master/acore-module.json")
 
     if [[ "$b" != "none" ]]; then
-        Joiner:add_repo "https://github.com/azerothcore/$res" "$res" "$b" && echo "Done, please re-run compiling and db assembly. Read instruction on module repository for more information"
+        Joiner:add_repo "https://gh-proxy.com/https://github.com/azerothcore/$res" "$res" "$b" && echo "Done, please re-run compiling and db assembly. Read instruction on module repository for more information"
     else
         echo "Cannot install $res module: it doesn't exists or no version compatible with AC v$ACORE_VERSION are available"
     fi
@@ -179,7 +179,7 @@ function inst_module_update {
     _tmp=$PWD
 
     if [ -d "$J_PATH_MODULES/$res/" ]; then
-        read v b < <(inst_getVersionBranch "https://raw.githubusercontent.com/azerothcore/$res/master/acore-module.json")
+        read v b < <(inst_getVersionBranch "https://gh-proxy.com/https://raw.githubusercontent.com/azerothcore/$res/master/acore-module.json")
 
         cd "$J_PATH_MODULES/$res/"
 
@@ -188,7 +188,7 @@ function inst_module_update {
             b=`git rev-parse --abbrev-ref HEAD`
         fi
 
-        Joiner:upd_repo "https://github.com/azerothcore/$res" "$res" "$b" && echo "Done, please re-run compiling and db assembly" || echo "Cannot update"
+        Joiner:upd_repo "https://gh-proxy.com/https://github.com/azerothcore/$res" "$res" "$b" && echo "Done, please re-run compiling and db assembly" || echo "Cannot update"
         cd $_tmp
     else
         echo "Cannot update! Path doesn't exist"
